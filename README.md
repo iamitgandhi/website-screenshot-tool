@@ -1,4 +1,10 @@
 # 📸 Local Website Screenshot Tool
+![MIT License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
+![Flask](https://img.shields.io/badge/Flask-WebApp-black?logo=flask)
+![Selenium](https://img.shields.io/badge/Selenium-Automation-43B02A?logo=selenium)
+![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red)
+
 
 A simple, fast, and fully local web app to capture full-page screenshots of any website across multiple device resolutions.  
 **Screenshots are saved directly to your Downloads folder, organized by website and device.**
@@ -31,6 +37,12 @@ A simple, fast, and fully local web app to capture full-page screenshots of any 
 
 - **No ZIP or Download Hassles**  
   All screenshots are saved directly to your Downloads folder for instant access.
+
+---
+
+## 🌐 Live Preview
+
+![Screenshot of the UI](Tool%20Preview.png)
 
 ---
 
