@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Screenshot Tool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn.stop {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            display: none;
+        }
+        .btn.stop:hover {
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        .button-group .btn {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .progress-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .status {
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .status.ready { background: #d4edda; color: #155724; }
+        .status.processing { background: #fff3cd; color: #856404; }
+        .status.completed { background: #d1ecf1; color: #0c5460; }
+        .status.stopped { background: #f8d7da; color: #721c24; }
+        .progress-count {
+            font-weight: 600;
+            color: #666;
+        }
+        .messages {
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .message {
+            padding: 5px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .message:last-child {
+            border-bottom: none;
+        }
+        .device-info {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .device-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e1e5e9;
+        }
+        .device-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .device-resolution {
+            color: #666;
+            font-size: 14px;
+        }
+        .save-info {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        .save-info h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+        .save-info p {
+            color: #155724;
+            margin: 5px 0;
+        }
+        .save-path {
+            font-family: 'Courier New', monospace;
+            background: #d4edda;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 Local Screenshot Tool</h1>
+            <p>Capture website screenshots across multiple device resolutions</p>
+        </div>
+        <div class="content">
+            <form id="screenshotForm">
+                <div class="form-group">
+                    <label for="urls">Website URLs (comma-separated):</label>
+                    <textarea 
+                        id="urls" 
+                        name="urls" 
+                        placeholder="Enter URLs separated by commas...&#10;Example: https://example.com, https://google.com"
+                        required
+                    ></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn" id="startBtn">
+                        🚀 Start Screenshots
+                    </button>
+                    <button type="button" class="btn stop" id="stopBtn">
+                        🛑 Stop Process
+                    </button>
+                </div>
+            </form>
+
+            <div class="save-info">
+                <h3>📂 Save Location</h3>
+                <p>Screenshots will be saved directly to:</p>
+                <div class="save-path">/home/iamitgandhi/Downloads/</div>
+                <p>Each website will create its own folder (e.g., <strong>example_com</strong>) containing device-specific subfolders.</p>
+            </div>
+
+            <div class="device-info">
+                <h3>📱 Supported Device Resolutions</h3>
+                <div class="device-grid">
+                    <div class="device-card">
+                        <div class="device-name">Desktop</div>
+                        <div class="device-resolution">1920 × 1080</div>
+                    </div>
+                    <div class="device-card">
+                        <div class="device-name">Laptop</div>
+                        <div class="device-resolution">1366 × 768</div>
+                    </div>
+                    <div class="device-card">
+                        <div class="device-name">Tablet</div>
+                        <div class="device-resolution">768 × 1024</div>
+                    </div>
+                    <div class="device-card">
+                        <div class="device-name">Mobile</div>
+                        <div class="device-resolution">390 × 844</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section" id="progressSection">
+                <div class="progress-header">
+                    <h3>📊 Progress</h3>
+                    <div>
+                        <span class="status" id="statusBadge">Ready</span>
+                        <span class="progress-count" id="progressCount">0/0</span>
+                    </div>
+                </div>
+                <div class="messages" id="messages"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let statusInterval;
+
+        document.getElementById('screenshotForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const urls = document.getElementById('urls').value;
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const progressSection = document.getElementById('progressSection');
+
+            if (!urls.trim()) {
+                alert('Please enter at least one URL');
+                return;
+            }
+
+            startBtn.disabled = true;
+            startBtn.textContent = '⏳ Processing...';
+            stopBtn.style.display = 'block';
+            progressSection.style.display = 'block';
+
+            try {
+                const response = await fetch('/start_screenshots', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ urls: urls })
+                });
+
+                if (response.ok) {
+                    startStatusPolling();
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                    resetButtons();
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+                resetButtons();
+            }
+        });
+
+        document.getElementById('stopBtn').addEventListener('click', async function() {
+            const stopBtn = document.getElementById('stopBtn');
+            stopBtn.disabled = true;
+            stopBtn.textContent = '⏳ Stopping...';
+
+            try {
+                const response = await fetch('/stop', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    // Status polling will handle the UI updates
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                    stopBtn.disabled = false;
+                    stopBtn.textContent = '🛑 Stop Process';
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+                stopBtn.disabled = false;
+                stopBtn.textContent = '🛑 Stop Process';
+            }
+        });
+
+        function startStatusPolling() {
+            statusInterval = setInterval(updateStatus, 1000);
+        }
+
+        async function updateStatus() {
+            try {
+                const response = await fetch('/status');
+                const data = await response.json();
+                updateStatusDisplay(data);
+
+                if (data.status === 'Completed' || data.status === 'Stopped') {
+                    clearInterval(statusInterval);
+                    resetButtons();
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+            }
+        }
+
+        function updateStatusDisplay(data) {
+            const statusBadge = document.getElementById('statusBadge');
+            const progressCount = document.getElementById('progressCount');
+            const messages = document.getElementById('messages');
+
+            statusBadge.textContent = data.status;
+            statusBadge.className = 'status ' + data.status.toLowerCase();
+            progressCount.textContent = data.progress;
+
+            messages.innerHTML = '';
+            data.messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                messageDiv.textContent = message;
+                messages.appendChild(messageDiv);
+            });
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function resetButtons() {
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+
+            startBtn.disabled = false;
+            startBtn.textContent = '🚀 Start Screenshots';
+            stopBtn.style.display = 'none';
+            stopBtn.disabled = false;
+            stopBtn.textContent = '🛑 Stop Process';
+        }
+    </script>
+</body>
+</html>
