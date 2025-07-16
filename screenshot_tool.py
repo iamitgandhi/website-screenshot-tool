@@ -30,7 +30,7 @@ DEVICE_FOLDERS = {
 }
 
 BASE_SAVE_PATH = "screenshots"
-DOWNLOAD_PATH = "/home/iamitgandhi/Downloads"
+DOWNLOAD_PATH = "$HOME/Downloads"
 
 # Ensure directories exist
 os.makedirs(BASE_SAVE_PATH, exist_ok=True)

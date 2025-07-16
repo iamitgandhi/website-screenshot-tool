@@ -1,0 +1,21 @@
+[Unit]
+Description=Local Screenshot Tool
+After=network.target
+
+[Service]
+Type=simple
+User=your-username
+Group=your-username
+WorkingDirectory=$HOME/WebsiteScreenshotTool
+Environment=PATH=$HOME/WebsiteScreenshotTool/screenshot_env/bin
+ExecStart=$HOME/WebsiteScreenshotTool/screenshot_env/bin/python3 $HOME/WebsiteScreenshotTool/screenshot_tool.py
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=screenshot-tool
+
+[Install]
+WantedBy=multi-user.target

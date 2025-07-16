@@ -3,7 +3,7 @@
 ## Step-by-Step Setup
 
 ### 1. Replace your current screenshot_tool.py
-Replace your current `screenshot_tool.py` with the updated version that saves to `/home/iamitgandhi/Downloads`
+Replace your current `screenshot_tool.py` with the updated version that saves to `$HOME/Downloads`
 
 ### 2. Copy the service file to systemd directory
 ```bash

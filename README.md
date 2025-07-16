@@ -18,7 +18,7 @@ A simple, fast, and fully local web app to capture full-page screenshots of any 
   Finds and screenshots all internal pages of the provided websites.
 
 - **Organized Output**  
-  Each website gets its own folder in `/home/iamitgandhi/Downloads/`, with subfolders for each device type.
+  Each website gets its own folder in `$HOME/Downloads/`, with subfolders for each device type.
 
 - **Simple Web UI**  
   - Enter one or more URLs (comma-separated)
@@ -37,7 +37,7 @@ A simple, fast, and fully local web app to capture full-page screenshots of any 
 ## 📂 Folder Structure Example
 
 ```
-/home/iamitgandhi/Downloads/
+$HOME/Downloads/
 ├── example_com/
 │   ├── Desktop/
 │   ├── Laptop/
@@ -102,11 +102,11 @@ After=network.target
 
 [Service]
 Type=simple
-User=iamitgandhi
-Group=iamitgandhi
-WorkingDirectory=/home/iamitgandhi/WebsiteScreenshotTool
-Environment=PATH=/home/iamitgandhi/WebsiteScreenshotTool/screenshot_env/bin
-ExecStart=/home/iamitgandhi/WebsiteScreenshotTool/screenshot_env/bin/python3 /home/iamitgandhi/WebsiteScreenshotTool/screenshot_tool.py
+User=your-username
+Group=your-username
+WorkingDirectory=$HOME/WebsiteScreenshotTool
+Environment=PATH=$HOME/WebsiteScreenshotTool/screenshot_env/bin
+ExecStart=$HOME/WebsiteScreenshotTool/screenshot_env/bin/python3 $HOME/WebsiteScreenshotTool/screenshot_tool.py
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -143,7 +143,7 @@ sudo systemctl start screenshot-tool.service
   Click **Stop Process** to cancel the running task.
 
 - **Access Results:**  
-  Navigate to `/home/iamitgandhi/Downloads/` in your file manager.
+  Navigate to `$HOME/Downloads/` in your file manager.
 
 ---
 
